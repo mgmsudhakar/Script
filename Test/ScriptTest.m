@@ -1,4 +1,4 @@
-classdef BatteryScriptTest < matlab.unittest.TestCase
+classdef ScriptTest < matlab.unittest.TestCase
 
     methods (Test)
 

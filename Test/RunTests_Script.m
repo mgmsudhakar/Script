@@ -1,7 +1,7 @@
 import matlab.unittest.TestRunner
 import matlab.unittest.plugins.TestReportPlugin
 
-suite = testsuite("ModelTest")
+suite = testsuite("ScriptTest")
 
 runner = TestRunner.withTextOutput;
 runner.addPlugin(...

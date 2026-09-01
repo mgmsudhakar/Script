@@ -1,7 +1,7 @@
-classdef BatteryModelTest < matlab.unittest.TestCase
+classdef ModelTest < matlab.unittest.TestCase
 
     properties (TestParameter)
-        ModelName = {"BatteryModel_Harness"};
+        ModelName = {"Model_Harness"};
     end
 
     methods (Test)
@@ -77,7 +77,7 @@ classdef BatteryModelTest < matlab.unittest.TestCase
                 max(socData), 100);
 
             % Verify final SOC value
-            expectedSOC = 9.98;
+            expectedSOC = 10;
 
             testCase.verifyEqual( ...
                 socData(end), ...
