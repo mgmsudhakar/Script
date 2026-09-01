@@ -21,6 +21,11 @@ jobs:
       - name: MATLAB Hello World
         run: matlab -batch "disp('Hello, world! MATLAB is ready.')"
 
+        # Add all folders in current repo to MATLAB path
+      - name: Add all folders to MATLAB path
+        run: |
+          matlab -batch "addpath(genpath(pwd)); disp('All folders added to MATLAB path');"
+
       - name: Run MATLAB tests
         uses: matlab-actions/run-tests@v1
         with:
