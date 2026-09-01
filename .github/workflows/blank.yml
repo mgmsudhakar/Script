@@ -21,30 +21,12 @@ jobs:
       - name: MATLAB Hello World
         run: matlab -batch "disp('Hello, world! MATLAB is ready.')"
 
-      - name: Run MATLAB tests and write summary
-        run: |
-          matlab -batch "
-            results = runtests('Test','IncludeSubfolders',true);
-
-            % Build a table with test names and status
-            T = table({results.Name}', [results.Passed]', [results.Failed]', [results.Incomplete]', ...
-                      'VariableNames', {'TestName','Passed','Failed','Incomplete'});
-
-            % Write Markdown table to GitHub summary
-            fid = fopen(getenv('GITHUB_STEP_SUMMARY'),'a');
-            fprintf(fid,'### MATLAB Test Results\n\n');
-            fprintf(fid,'| TestName | Passed | Failed | Incomplete |\n');
-            fprintf(fid,'|----------|--------|--------|------------|\n');
-            for i=1:height(T)
-                fprintf(fid,'| %s | %d | %d | %d |\n', T.TestName{i}, T.Passed(i), T.Failed(i), T.Incomplete(i));
-            end
-            % Totals row
-            fprintf(fid,'| **TOTAL** | %d | %d | %d |\n', sum(T.Passed), sum(T.Failed), sum(T.Incomplete));
-            fclose(fid);
-
-            % Fail workflow if any test failed
-            assertSuccess(results);
-          "
+      - name: Run MATLAB tests
+        uses: matlab-actions/run-tests@v1
+        with:
+          source-folder: Test
+          test-results-junit: test-results/results.xml
+          # Add Functions folder before tests run
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
