@@ -30,6 +30,7 @@ jobs:
         uses: matlab-actions/run-tests@v1
         with:
           source-folder: Test1
+          select-by-folder: Test1
           test-results-junit: test-results/results.xml
          
       - name: Upload test results
