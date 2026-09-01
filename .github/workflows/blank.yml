@@ -41,8 +41,11 @@ jobs:
           path: test-results/results.xml
           reporter: java-junit
 
-          
-# 👇 New step: Parse XML and write summary with colors
+      # 👇 New step: Install xmlstarlet
+      - name: Install XML tools
+        run: sudo apt-get update && sudo apt-get install -y xmlstarlet
+
+      # 👇 Parse JUnit XML and write summary with colors
       - name: Summarize test results
         run: |
           echo "### MATLAB Test Results" >> $GITHUB_STEP_SUMMARY
@@ -50,13 +53,25 @@ jobs:
           echo "| Test Case | Result |" >> $GITHUB_STEP_SUMMARY
           echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
 
-          # Parse JUnit XML with xmllint
-          for tc in $(xmllint --xpath '//testcase/@name' test-results/results.xml | sed 's/name="\([^"]*\)"/\1\n/g'); do
-            # Check if testcase has a <failure> or <error> node
-            if xmllint --xpath "count(//testcase[@name='$tc']/failure)" test-results/results.xml | grep -q '^0$' && \
-               xmllint --xpath "count(//testcase[@name='$tc']/error)" test-results/results.xml | grep -q '^0$'; then
+          # Loop through testcases
+          for tc in $(xmlstarlet sel -t -m "//testcase" -v "@name" -n test-results/results.xml); do
+            # Check if testcase has failure or error
+            fails=$(xmlstarlet sel -t -v "count(//testcase[@name='$tc']/failure)" test-results/results.xml)
+            errs=$(xmlstarlet sel -t -v "count(//testcase[@name='$tc']/error)" test-results/results.xml)
+
+            if [ "$fails" -eq 0 ] && [ "$errs" -eq 0 ]; then
               echo "| $tc | ✅ Pass |" >> $GITHUB_STEP_SUMMARY
             else
               echo "| $tc | ❌ Fail |" >> $GITHUB_STEP_SUMMARY
             fi
           done
+
+          # Totals row
+          total=$(xmlstarlet sel -t -v "count(//testcase)" test-results/results.xml)
+          passed=$(xmlstarlet sel -t -v "count(//testcase[not(failure) and not(error)])" test-results/results.xml)
+          failed=$((total - passed))
+          echo "| **TOTAL** | $passed / $total Passed |" >> $GITHUB_STEP_SUMMARY
+
+          
+
+          
