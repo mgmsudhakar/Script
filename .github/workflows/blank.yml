@@ -40,3 +40,23 @@ jobs:
           name: MATLAB Unit Tests
           path: test-results/results.xml
           reporter: java-junit
+
+          
+# 👇 New step: Parse XML and write summary with colors
+      - name: Summarize test results
+        run: |
+          echo "### MATLAB Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Case | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
+
+          # Parse JUnit XML with xmllint
+          for tc in $(xmllint --xpath '//testcase/@name' test-results/results.xml | sed 's/name="\([^"]*\)"/\1\n/g'); do
+            # Check if testcase has a <failure> or <error> node
+            if xmllint --xpath "count(//testcase[@name='$tc']/failure)" test-results/results.xml | grep -q '^0$' && \
+               xmllint --xpath "count(//testcase[@name='$tc']/error)" test-results/results.xml | grep -q '^0$'; then
+              echo "| $tc | ✅ Pass |" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "| $tc | ❌ Fail |" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
