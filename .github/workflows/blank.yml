@@ -38,7 +38,7 @@ jobs:
           source-folder: Test              # folder containing your unit tests
           select-by-file: BatteryScriptTest.m     # optional: specify test file
           test-results-junit: test-results/results.xml
-          startup-options: "addpath('Functions'); disp('Functions folder added');"
+          startup-options: addpath('Functions');
 
       # Upload test results as artifact
       - name: Upload test results
