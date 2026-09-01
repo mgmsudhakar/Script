@@ -21,10 +21,6 @@ jobs:
       - name: MATLAB Hello World
         run: matlab -batch "disp('Hello, world! MATLAB is ready.')"
 
-        # Add Functions folder before tests
-      - name: Add Functions folder
-        run: matlab -batch "addpath(genpath('Functions')); disp('Functions folder added to path');"
-
       - name: Run MATLAB tests
         uses: matlab-actions/run-tests@v1
         with:
