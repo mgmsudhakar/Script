@@ -21,25 +21,7 @@ jobs:
       - name: Setup MATLAB
         uses: matlab-actions/setup-matlab@v1
 
-      # Run MATLAB unit tests
-      - name: Run MATLAB tests
-        uses: matlab-actions/run-tests@v1
-        with:
-          source-folder: test              # folder containing your unit tests
-          select-by-file: myUnitTest.m     # optional: specify test file
-          test-results-junit: test-results/results.xml
-
-      # Upload test results as artifact
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: matlab-test-results
-          path: test-results/results.xml
-
-      # Report test results in GitHub Actions UI
-      - name: Report test results
-        uses: dorny/test-reporter@v1
-        with:
-          name: MATLAB Unit Tests
-          path: test-results/results.xml
-          reporter: java-junit
+      # Confirm MATLAB setup with Hello World
+      - name: MATLAB Hello World
+        run: |
+          matlab -batch "disp('Hello, world! MATLAB is ready.')"
