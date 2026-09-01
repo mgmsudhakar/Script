@@ -25,6 +25,11 @@ jobs:
       - name: MATLAB Hello World
         run: |
           matlab -batch "disp('Hello, world! MATLAB is ready.')"
+          
+      # Add Functions folder to MATLAB path
+      - name: Add Functions folder
+        run: |
+          matlab -batch "addpath('Functions'); disp('Functions folder added to path');"
 
       # Run MATLAB unit tests
       - name: Run MATLAB tests
