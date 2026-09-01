@@ -32,7 +32,7 @@ jobs:
           source-folder: Test
           test-results-junit: test-results/results.xml
           # Add Functions folder before tests run
-          startup-options: "eval(\addpath(genpath(pwd))\)"
+          startup-options: "eval(\addpath(genpath(pwd)))"
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
